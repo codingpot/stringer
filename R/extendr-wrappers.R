@@ -12,3 +12,17 @@ str_regex_count <- function(strings, pattern) .Call(wrap__str_regex_count, strin
 
 str_text_count <- function(strings, sub) .Call(wrap__str_text_count, strings, sub)
 
+str_regex_detect <- function(strings, pattern) .Call(wrap__str_regex_detect, strings, pattern)
+
+str_text_detect <- function(strings, sub) .Call(wrap__str_text_detect, strings, sub)
+
+str_regex_extract <- function(strings, pattern) .Call(wrap__str_regex_extract, strings, pattern)
+
+str_text_extract <- function(strings, sub) .Call(wrap__str_text_extract, strings, sub)
+
+single_str_regex_extract_all <- function(string, pattern) .Call(wrap__single_str_regex_extract_all, string, pattern)
+
+single_str_text_extract_all <- function(string, sub) .Call(wrap__single_str_text_extract_all, string, sub)
+
+str_length <- function(str) .Call(wrap__str_length, str)
+
