@@ -9,3 +9,4 @@ name = 'stringer'
 
 [dependencies]
 extendr-api = '*'
+regex = "1.5"

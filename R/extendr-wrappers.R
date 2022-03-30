@@ -8,7 +8,7 @@
 #' @useDynLib stringer, .registration = TRUE
 NULL
 
-#' Return string `"Hello world!"` to R.
-#' @export
-hello_world <- function() .Call(wrap__hello_world)
+str_regex_count <- function(strings, pattern) .Call(wrap__str_regex_count, strings, pattern)
+
+str_text_count <- function(strings, sub) .Call(wrap__str_text_count, strings, sub)
 
