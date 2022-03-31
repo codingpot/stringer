@@ -12,7 +12,7 @@ setClass(
     "coll",
     representation(
         value = "character",
-        locale = "character",
+        locale = "character"
     )
 )
 
@@ -24,6 +24,6 @@ regex <- function(x) {
     new("regex", value = x)
 }
 
-coll <- function(x, local="en") {
-    new("coll", value = x, locale = local)
+coll <- function(x, locale="en") {
+    new("coll", value = x, locale = locale)
 }
