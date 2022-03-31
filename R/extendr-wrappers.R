@@ -8,21 +8,17 @@
 #' @useDynLib stringer, .registration = TRUE
 NULL
 
-str_regex_count <- function(strings, pattern) .Call(wrap__str_regex_count, strings, pattern)
-
-str_text_count <- function(strings, sub) .Call(wrap__str_text_count, strings, sub)
-
-str_regex_detect <- function(strings, pattern) .Call(wrap__str_regex_detect, strings, pattern)
-
-str_text_detect <- function(strings, sub) .Call(wrap__str_text_detect, strings, sub)
-
-str_regex_extract <- function(strings, pattern) .Call(wrap__str_regex_extract, strings, pattern)
-
-str_text_extract <- function(strings, sub) .Call(wrap__str_text_extract, strings, sub)
-
-single_str_regex_extract_all <- function(string, pattern) .Call(wrap__single_str_regex_extract_all, string, pattern)
-
-single_str_text_extract_all <- function(string, sub) .Call(wrap__single_str_text_extract_all, string, sub)
-
 str_length <- function(str) .Call(wrap__str_length, str)
+
+str_utf8_locate <- function(str, sub) .Call(wrap__str_utf8_locate, str, sub)
+
+str_utf8_locates <- function(str, sub) .Call(wrap__str_utf8_locates, str, sub)
+
+str_regex_locate <- function(str, pat) .Call(wrap__str_regex_locate, str, pat)
+
+str_regex_locates <- function(str, pat) .Call(wrap__str_regex_locates, str, pat)
+
+str_bytes_locate <- function(str, sub) .Call(wrap__str_bytes_locate, str, sub)
+
+str_bytes_locates <- function(str, sub) .Call(wrap__str_bytes_locates, str, sub)
 
