@@ -157,9 +157,9 @@ pub fn convert_utf8_to(vec: Vec<u32>) -> String {
         }
         if v <= 0x0010FFFF {
             result.push((((v >> 18) & 0b00000111) | 0b11110000) as u8);
-            result.push(((v >> 12) & 0b00111111) as u8);
-            result.push(((v >> 6) & 0b00111111) as u8);
-            result.push(((v >> 0) & 0b00111111) as u8);
+            result.push((((v >> 12) & 0b00111111) | 0b10000000) as u8);
+            result.push((((v >> 6) & 0b00111111) | 0b10000000) as u8);
+            result.push(((v & 0b00111111) | 0b10000000) as u8);
             continue;
         }
     }
@@ -168,21 +168,4 @@ pub fn convert_utf8_to(vec: Vec<u32>) -> String {
         Ok(x) => x,
         Err(_) => String::from(""),
     }
-}
-
-#[test]
-fn test() {
-    let a = "가".to_string();
-    for i in a.as_bytes() {
-        print!("{:#010b} ", i);
-    }
-    println!();
-    let c = convert_utf8_from(a.clone());
-    println!("{:?}", c);
-    let s = convert_utf8_to(c);
-    for i in s.as_bytes() {
-        print!("{:#010b} ", i);
-    }
-    println!();
-    println!("{}", s);
 }
