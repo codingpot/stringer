@@ -3,7 +3,7 @@ use regex::Regex;
 
 use crate::utf8;
 
-pub fn single_utf8_str_find(target: String, sub: String) -> Option<(usize, usize)> {
+pub fn single_utf8_str_locate(target: String, sub: String) -> Option<(usize, usize)> {
     let index = match target.find(&sub) {
         Some(index) => index,
         None => return None,
@@ -16,7 +16,7 @@ pub fn single_utf8_str_find(target: String, sub: String) -> Option<(usize, usize
     Some((start, end))
 }
 
-pub fn multi_utf8_str_find(target: String, sub: String) -> Vec<(usize, usize)> {
+pub fn multi_utf8_str_locate(target: String, sub: String) -> Vec<(usize, usize)> {
     let mut result = Vec::new();
     
     let mut prev_length = 0;
@@ -40,7 +40,7 @@ pub fn multi_utf8_str_find(target: String, sub: String) -> Vec<(usize, usize)> {
     result
 }
 
-pub fn single_regex_str_find(string: String, pat: String) -> Result<(usize, usize), String> {
+pub fn single_regex_str_locate(string: String, pat: String) -> Result<(usize, usize), String> {
     let re = match Regex::new(pat.as_str()) {
         Ok(re) => re,
         Err(_) => return Err(format!("Invalid regex pattern: {}", pat)),
@@ -58,7 +58,7 @@ pub fn single_regex_str_find(string: String, pat: String) -> Result<(usize, usiz
     }
 }
 
-pub fn multi_regex_str_find(string: String, pat: String) -> Result<Vec<(usize, usize)>, String> {
+pub fn multi_regex_str_locate(string: String, pat: String) -> Result<Vec<(usize, usize)>, String> {
     let re = match Regex::new(pat.as_str()) {
         Ok(re) => re,
         Err(_) => return Err(format!("Invalid regex pattern: {}", pat)),
@@ -85,8 +85,43 @@ pub fn multi_regex_str_find(string: String, pat: String) -> Result<Vec<(usize, u
     Ok(result)
 }
 
+pub fn single_bytes_str_locate(string: String, sub: String) -> Option<(usize, usize)> {
+    let index = match string.find(sub.as_str()) {
+        Some(index) => index,
+        None => return None,
+    };
+
+    let start = index;
+    let end = index + sub.len();
+
+    Some((start, end))
+}
+
+pub fn multi_bytes_str_locate(string: String, sub: String) -> Vec<(usize, usize)> {
+    let mut result = Vec::new();
+    
+    let mut prev_length = 0;
+    let mut remain_str = string.clone();
+
+    loop {
+        match remain_str.find(sub.as_str()) {
+            Some(index) => {
+                let start = prev_length + index;
+                let end = start + sub.len();
+
+                result.push((start, end));
+                prev_length += end;
+                remain_str = remain_str.as_str()[index+sub.len()..].to_string();
+            },
+            None => break,
+        }
+    }
+
+    result
+}
+
 #[test]
 fn test() {
-    let opt = multi_regex_str_find(String::from("가 나 다 라 마 바 사"), String::from("[가-사]"));
+    let opt = multi_bytes_str_locate(String::from("가 가 가 가 가"), String::from("가"));
     println!("{:?}", opt);
 }
