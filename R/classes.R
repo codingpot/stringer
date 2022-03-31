@@ -1,5 +1,5 @@
 setClass(
-    "text",
+    "fixed",
     representation(value = "character")
 )
 
@@ -8,8 +8,8 @@ setClass(
     representation(value = "character")
 )
 
-text <- function(x) {
-    new("text", value = x)
+fixed <- function(x) {
+    new("fixed", value = x)
 }
 
 regex <- function(x) {
