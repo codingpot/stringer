@@ -8,6 +8,16 @@
 #' @useDynLib stringer, .registration = TRUE
 NULL
 
+add_s_flag_to_dot <- function(string) .Call(wrap__add_s_flag_to_dot, string)
+
+add_m_flag_to <- function(string) .Call(wrap__add_m_flag_to, string)
+
+add_x_flag_to <- function(string) .Call(wrap__add_x_flag_to, string)
+
+add_i_flag_to <- function(string) .Call(wrap__add_i_flag_to, string)
+
+convert_to_uppercase <- function(string) .Call(wrap__convert_to_uppercase, string)
+
 str_length <- function(str) .Call(wrap__str_length, str)
 
 str_utf8_locate <- function(str, sub) .Call(wrap__str_utf8_locate, str, sub)
