@@ -20,9 +20,9 @@ convert_to_uppercase <- function(string) .Call(wrap__convert_to_uppercase, strin
 
 str_length <- function(str) .Call(wrap__str_length, str)
 
-str_utf8_locate <- function(str, sub) .Call(wrap__str_utf8_locate, str, sub)
+str_utf8_locate <- function(str, sub, folding) .Call(wrap__str_utf8_locate, str, sub, folding)
 
-str_utf8_locates <- function(str, sub) .Call(wrap__str_utf8_locates, str, sub)
+str_utf8_locates <- function(str, sub, folding) .Call(wrap__str_utf8_locates, str, sub, folding)
 
 str_regex_locate <- function(str, pat) .Call(wrap__str_regex_locate, str, pat)
 
