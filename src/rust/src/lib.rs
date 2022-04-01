@@ -6,6 +6,13 @@ use extendr_api::prelude::*;
 extendr_module! {
     mod stringer;
 
+    fn add_s_flag_to_dot;
+    fn add_m_flag_to;
+    fn add_x_flag_to;
+    fn add_i_flag_to;
+
+    fn convert_to_uppercase;
+
     fn str_length;
 
     fn str_utf8_locate;
@@ -14,6 +21,31 @@ extendr_module! {
     fn str_regex_locates;
     fn str_bytes_locate;
     fn str_bytes_locates;
+}
+
+#[extendr]
+pub fn add_s_flag_to_dot(string: String) -> String {
+    string.replace(".", "(?s:.)")
+}
+
+#[extendr]
+pub fn add_m_flag_to(string: String) -> String {
+    string.replace("^", "(?m)^").replace("$", "(?m)$")
+}
+
+#[extendr]
+pub fn add_x_flag_to(string: String) -> String {
+    "(?x)".to_string() + &string
+}
+
+#[extendr]
+pub fn add_i_flag_to(string: String) -> String {
+    "(?i)".to_string() + &string
+}
+
+#[extendr]
+pub fn convert_to_uppercase(string: String) -> String {
+    string.to_uppercase()
 }
 
 #[extendr]
@@ -82,4 +114,11 @@ pub fn str_bytes_locates(str: String, sub: String) -> Vec<i64> {
         result.push(v.1 as i64);
     }
     result
+}
+
+#[test]
+fn test() {
+    let a = "\u{0130}i한Q";
+    let n = a.to_string().to_lowercase();
+    println!("{}", n);
 }
