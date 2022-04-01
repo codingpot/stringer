@@ -169,3 +169,20 @@ pub fn convert_utf8_to(vec: Vec<u32>) -> String {
         Err(_) => String::from(""),
     }
 }
+
+pub fn disable_regex(string: String) -> String {
+    let mut result = String::new();
+
+    for c in string.chars() {
+        if c == '[' || c == ']' || c == '(' || c == ')' || c == '{' || c == '}' || c == '.' || c == '*' || c == '+' || c == '?' || c == '|' || c == '^' || c == '$' || c == '\\' {
+            result.push('\\');
+        }
+        result.push(c);
+    }
+
+    result
+}
+
+pub fn add_i_flag_to(string: String) -> String {
+    "(?i)".to_string() + &string
+}
