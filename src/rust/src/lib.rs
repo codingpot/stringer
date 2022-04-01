@@ -6,6 +6,11 @@ use extendr_api::prelude::*;
 extendr_module! {
     mod stringer;
 
+    fn get_boundary_character;
+    fn get_boundary_linebreak;
+    fn get_boundary_sentence;
+    fn get_boundary_word;
+
     fn add_s_flag_to_dot;
     fn add_m_flag_to;
     fn add_x_flag_to;
@@ -21,6 +26,26 @@ extendr_module! {
     fn str_regex_locates;
     fn str_bytes_locate;
     fn str_bytes_locates;
+}
+
+#[extendr]
+pub fn get_boundary_character() -> String {
+    "^\\w(?s:.)+\\w$".to_string()
+}
+
+#[extendr]
+pub fn get_boundary_word() -> String {
+    "^\\b(?s:.)+\\b$".to_string()
+}
+
+#[extendr]
+pub fn get_boundary_linebreak() -> String {
+    "^(\\n|\\r|\\r\\n)(?s:.)+(\\n|\\r|\\r\\n)$".to_string()
+}
+
+#[extendr]
+pub fn get_boundary_sentence() -> String {
+    "^(\\b|\\s|\"|!|\\?|,|\\.|'|:|،|-|—|`|\\|)+(?s:.)*(\\b|\\s|\"|!|\\?|,|\\.|'|:|،|-|—|`|\\|)+$".to_string()
 }
 
 #[extendr]
