@@ -3,38 +3,61 @@ use regex::Regex;
 
 use crate::utf8;
 
-pub fn single_utf8_str_locate(target: String, sub: String) -> Option<(usize, usize)> {
-    let index = match target.find(&sub) {
-        Some(index) => index,
-        None => return None,
-    };
+pub fn single_utf8_str_locate(
+    target: String,
+    sub: String,
+    folding: bool,
+) -> Option<(usize, usize)> {
+    if !folding {
+        let index = match target.find(&sub) {
+            Some(index) => index,
+            None => return None,
+        };
 
-    let sub_target = &target.as_str()[index..index+sub.len()];
-    let start = utf8::length_of((&target.as_str()[..index]).to_string());
-    let end = start + utf8::length_of(sub_target.to_string());
+        let start = index;
+        let end = start + sub.len();
 
-    Some((start, end))
+        Some((start, end))
+    } else {
+        let re = match Regex::new(&utf8::add_i_flag_to(utf8::disable_regex(sub.clone()))) {
+            Ok(re) => re,
+            Err(_) => return None,
+        };
+
+        re.find(&target).map(|m| (m.start(), m.end()))
+    }
 }
 
-pub fn multi_utf8_str_locate(target: String, sub: String) -> Vec<(usize, usize)> {
+pub fn multi_utf8_str_locate(target: String, sub: String, folding: bool) -> Vec<(usize, usize)> {
     let mut result = Vec::new();
-    
-    let mut prev_length = 0;
-    let mut remain_str = target.clone();
 
-    loop {
-        match remain_str.find(&sub) {
-            Some(index) => {
-                let sub_target = &remain_str.as_str()[index..index+sub.len()];
-                let start = utf8::length_of((&remain_str.as_str()[..index]).to_string());
-                let end = start + utf8::length_of(sub_target.to_string());
+    if !folding {
+        let mut prev_length = 0;
+        let mut remain_str = target.clone();
 
-                result.push((prev_length+start, prev_length+end));
-                prev_length += end;
-                remain_str = remain_str.as_str()[index+sub.len()..].to_string();
-            },
-            None => break,
+        loop {
+            match remain_str.find(&sub) {
+                Some(index) => {
+                    let sub_target = &remain_str.as_str()[index..index + sub.len()];
+                    let start = utf8::length_of((&remain_str.as_str()[..index]).to_string());
+                    let end = start + utf8::length_of(sub_target.to_string());
+
+                    result.push((prev_length + start, prev_length + end));
+                    prev_length += end;
+                    remain_str = remain_str.as_str()[index + sub.len()..].to_string();
+                }
+                None => break,
+            }
         }
+    } else {
+        let re = match Regex::new(&utf8::add_i_flag_to(utf8::disable_regex(sub.clone()))) {
+            Ok(re) => re,
+            Err(_) => return result,
+        };
+
+        re.find_iter(&target).for_each(|m| {
+            result.push((m.start(), m.end()));
+        });
     }
 
     result
@@ -46,14 +69,11 @@ pub fn single_regex_str_locate(string: String, pat: String) -> Result<(usize, us
         Err(_) => return Err(format!("Invalid regex pattern: {}", pat)),
     };
     let result = re.find(string.as_str());
-    
+
     match result {
         Some(index) => {
-            let start = utf8::length_of((&string.as_str()[..index.start()]).to_string());
-            let end = start + utf8::length_of((&string.as_str()[index.start()..index.end()]).to_string());
-
-            Ok((start, end))
-        },
+            Ok((index.start(), index.end()))
+        }
         None => Err(String::from("No match")),
     }
 }
@@ -64,23 +84,10 @@ pub fn multi_regex_str_locate(string: String, pat: String) -> Result<Vec<(usize,
         Err(_) => return Err(format!("Invalid regex pattern: {}", pat)),
     };
     let mut result = Vec::new();
-    
-    let mut prev_length = 0;
-    let mut remain_str = string.clone();
 
-    loop {
-        match re.find(remain_str.as_str()) {
-            Some(index) => {
-                let start = utf8::length_of((&remain_str.as_str()[..index.start()]).to_string());
-                let end = start + utf8::length_of((&remain_str.as_str()[index.start()..index.end()]).to_string());
-
-                result.push((prev_length+start, prev_length+end));
-                prev_length += end;
-                remain_str = remain_str.as_str()[index.end()..].to_string();
-            },
-            None => break,
-        }
-    }
+    re.find_iter(string.as_str()).for_each(|m| {
+        result.push((m.start(), m.end()));
+    });
 
     Ok(result)
 }
@@ -99,7 +106,7 @@ pub fn single_bytes_str_locate(string: String, sub: String) -> Option<(usize, us
 
 pub fn multi_bytes_str_locate(string: String, sub: String) -> Vec<(usize, usize)> {
     let mut result = Vec::new();
-    
+
     let mut prev_length = 0;
     let mut remain_str = string.clone();
 
@@ -111,17 +118,11 @@ pub fn multi_bytes_str_locate(string: String, sub: String) -> Vec<(usize, usize)
 
                 result.push((start, end));
                 prev_length += end;
-                remain_str = remain_str.as_str()[index+sub.len()..].to_string();
-            },
+                remain_str = remain_str.as_str()[index + sub.len()..].to_string();
+            }
             None => break,
         }
     }
 
     result
-}
-
-#[test]
-fn test() {
-    let opt = multi_bytes_str_locate(String::from("가 가 가 가 가"), String::from("가"));
-    println!("{:?}", opt);
 }
