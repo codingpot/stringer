@@ -54,8 +54,8 @@ pub fn str_length(str: String) -> i64 {
 }
 
 #[extendr]
-pub fn str_utf8_locate(str: String, sub: String) -> Vec<i64> {
-    let index = locate::single_utf8_str_locate(str, sub);
+pub fn str_utf8_locate(str: String, sub: String, folding: bool) -> Vec<i64> {
+    let index = locate::single_utf8_str_locate(str, sub, folding);
     match index {
         Some((start, end)) => vec![start as i64, end as i64],
         None => vec![],
@@ -63,9 +63,9 @@ pub fn str_utf8_locate(str: String, sub: String) -> Vec<i64> {
 }
 
 #[extendr]
-pub fn str_utf8_locates(str: String, sub: String) -> Vec<i64> {
+pub fn str_utf8_locates(str: String, sub: String, folding: bool) -> Vec<i64> {
     let mut result = vec![];
-    let indexs = locate::multi_utf8_str_locate(str, sub);
+    let indexs = locate::multi_utf8_str_locate(str, sub, folding);
     for (_, v) in indexs.iter().enumerate() {
         result.push(v.0 as i64);
         result.push(v.1 as i64);
@@ -114,11 +114,4 @@ pub fn str_bytes_locates(str: String, sub: String) -> Vec<i64> {
         result.push(v.1 as i64);
     }
     result
-}
-
-#[test]
-fn test() {
-    let a = "\u{0130}i한Q";
-    let n = a.to_string().to_lowercase();
-    println!("{}", n);
 }
