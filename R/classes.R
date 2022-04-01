@@ -26,6 +26,13 @@ setClass(
     )
 )
 
+setClass(
+    "boundary",
+    representation(
+        value = "character"
+    )
+)
+
 fixed <- function(x, ignore_case = FALSE) {
     new("fixed", value = x, ignore_case = ignore_case)
 }
@@ -84,4 +91,17 @@ get_coll <- function(x) {
     }
 
     x@value
+}
+
+boundary <- function(x) {
+    if (is.null(x)) {
+        return(NULL)
+    }
+    switch(
+        x,
+        "word" = get_boundary_word(),
+        "sentence" = get_boundary_sentence(),
+        "line_break" = get_boundary_linebreak(),
+        "character" = get_boundary_character()
+    )
 }
