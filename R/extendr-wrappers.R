@@ -8,6 +8,14 @@
 #' @useDynLib stringer, .registration = TRUE
 NULL
 
+get_boundary_character <- function() .Call(wrap__get_boundary_character)
+
+get_boundary_linebreak <- function() .Call(wrap__get_boundary_linebreak)
+
+get_boundary_sentence <- function() .Call(wrap__get_boundary_sentence)
+
+get_boundary_word <- function() .Call(wrap__get_boundary_word)
+
 add_s_flag_to_dot <- function(string) .Call(wrap__add_s_flag_to_dot, string)
 
 add_m_flag_to <- function(string) .Call(wrap__add_m_flag_to, string)
